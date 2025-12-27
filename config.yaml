@@ -1,6 +1,4 @@
-path = "parkinson_model.joblib"
-
-features = [
-    "MDVP:Fo(Hz)",
-    "HNR"
-]
+path: "parkinson_model.joblib"
+features:
+  - "MDVP:Fo(Hz)"
+  - "HNR"
