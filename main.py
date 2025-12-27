@@ -1,33 +1,39 @@
 import pandas as pd
 import joblib
+import yaml
 
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.pipeline import Pipeline
 
-from config import features, path
+
+# Load config
+with open("config.yaml", "r") as f:
+    config = yaml.safe_load(f)
+
+features = config["features"]
+path = config["path"]
 
 # Load dataset
-url = "https://archive.ics.uci.edu/ml/machine-learning-databases/parkinsons/parkinsons.data"
-df = pd.read_csv(url)
+df = pd.read_csv("parkinsons.csv")
 
-# Select features and target
 X = df[features]
 y = df["status"]
 
-# Split data
+# Split
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.25, random_state=42
 )
 
-# Train model
-model = KNeighborsClassifier(n_neighbors=7)
-model.fit(X_train, y_train)
+# Model pipeline
+model = Pipeline([
+    ("scaler", MinMaxScaler()),
+    ("knn", KNeighborsClassifier(n_neighbors=5))
+])
 
-# Evaluate
-y_pred = model.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-print(accuracy)
+# Train
+model.fit(X_train, y_train)
 
 # Save model
 joblib.dump(model, path)
