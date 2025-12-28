@@ -1,2 +1,2 @@
-selected_features: ["MDVP:Fo(Hz)", "spread1"]
 path: "my_model.joblib"
+features: ["MDVP:Fo(Hz)", "spread1"]
