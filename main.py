@@ -1,28 +1,30 @@
 import pandas as pd
-# טעינת הקובץ כ-DataFrame
-df = pd.read_csv('parkinsons.csv')
 import joblib
-joblib.dump(model, 'my_model.joblib')
-# שינוי המאפיינים כדי להעלות את הדיוק
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
+# 1. טעינת הנתונים
+df = pd.read_csv('parkinsons.csv')
+
+# 2. בחירת המאפיינים (שימי לב לשמות המדויקים)
 features = ['MDVP:Fo(Hz)', 'spread1']
 X = df[features]
 y = df['status']
-print(f"נבחרו מאפיינים חדשים: {features}")
-from sklearn.preprocessing import MinMaxScaler
-# נרמול הנתונים לטווח של 0 עד 1
+
+# 3. נרמול
 scaler = MinMaxScaler()
 X_scaled = scaler.fit_transform(X)
-from sklearn.model_selection import train_test_split
-# פיצול לסט אימון וסט בדיקה
+
+# 4. פיצול הנתונים
 X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
-from sklearn.neighbors import KNeighborsClassifier
-# ננסה שכן אחד קרוב ביותר
+
+# 5. מודל KNN עם שכן אחד (כפי שעשית בקולאב)
 model = KNeighborsClassifier(n_neighbors=1)
 model.fit(X_train, y_train)
-from sklearn.metrics import accuracy_score
-# בדיקת הדיוק על סט הבדיקה
-y_pred = model.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-print(f"Accuracy: {accuracy}")
+
+# 6. שמירת המודל - השם חייב להיות זהה למה שכתוב ב-config
+joblib.dump(model, 'my_model.joblib')
 
 
