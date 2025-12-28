@@ -1,4 +1,2 @@
-path: model.joblib
-features:
-  - "MDVP:Fo(Hz)"
-  - "HNR"
+selected_features: ["MDVP:Fo(Hz)", "spread1"]
+path: "parkinson_model.joblib״
